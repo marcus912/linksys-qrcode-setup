@@ -1,12 +1,11 @@
 import {Divider, Grid, Stack, Typography, useMediaQuery} from '@mui/material';
 import AuthCardWrapper from '../authentication/AuthCardWrapper';
-import { Link } from 'react-router-dom';
-import Logo from '../../../ui-component/Logo';
-import AuthLogin from '../authentication/auth-forms/AuthLogin';
+import {Link} from 'react-router-dom';
 import AuthFooter from '../../../ui-component/cards/AuthFooter';
 import AuthWrapper1 from '../authentication/AuthWrapper1';
 import {useTheme} from "@mui/material/styles";
 import useAuth from "../../../hooks/useAuth";
+import SetupInfo from "./SetupInfo";
 
 const LinksysRouterSetup = () => {
     const theme = useTheme();
@@ -20,11 +19,6 @@ const LinksysRouterSetup = () => {
                         <Grid item sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
                             <AuthCardWrapper>
                                 <Grid container spacing={2} alignItems="center" justifyContent="center">
-                                    <Grid item sx={{ mb: 3 }}>
-                                        <Link to="#" aria-label="theme-logo">
-                                            <Logo />
-                                        </Link>
-                                    </Grid>
                                     <Grid item xs={12}>
                                         <Grid
                                             container
@@ -39,21 +33,21 @@ const LinksysRouterSetup = () => {
                                                         gutterBottom
                                                         variant={matchDownSM ? 'h3' : 'h2'}
                                                     >
-                                                        Hi, Welcome Back
+                                                        Linksys
                                                     </Typography>
                                                     <Typography
                                                         variant="caption"
                                                         fontSize="16px"
                                                         textAlign={matchDownSM ? 'center' : 'inherit'}
                                                     >
-                                                        Enter your credentials to continue
+                                                        Enter data to continue setup
                                                     </Typography>
                                                 </Stack>
                                             </Grid>
                                         </Grid>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <AuthLogin />
+                                        <SetupInfo />
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Divider />
