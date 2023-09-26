@@ -15,6 +15,7 @@ const AuthCheckMail = Loadable(lazy(() => import('views/pages/authentication/aut
 
 // Linksys
 const LinksysSetup = Loadable(lazy(() => import('views/pages/linksys/LinksysRouterSetup')));
+const LinksysSetupSuccess = Loadable(lazy(() => import('views/pages/linksys/LinksysSetupSuccess')));
 
 // ==============================|| AUTH ROUTING ||============================== //
 
@@ -51,6 +52,10 @@ const LoginRoutes = {
         {
             path: 'setup',
             element: <LinksysSetup/>
+        },
+        {
+            path: 'setup/success',
+            element: <LinksysSetupSuccess/>
         }
     ]
 };

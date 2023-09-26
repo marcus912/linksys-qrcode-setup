@@ -1,41 +1,22 @@
-import {Divider, Grid, Stack, Typography, useMediaQuery} from '@mui/material';
-import AuthCardWrapper from '../authentication/AuthCardWrapper';
-import {Link, useSearchParams} from 'react-router-dom';
-import AuthFooter from '../../../ui-component/cards/AuthFooter';
-import AuthWrapper1 from '../authentication/AuthWrapper1';
-import {useTheme} from '@mui/material/styles';
-import useAuth from '../../../hooks/useAuth';
-import SetupInfo from './SetupInfo';
-import {useEffect, useState} from 'react';
+import {Divider, Grid, Stack, Typography, useMediaQuery} from "@mui/material";
+import AuthCardWrapper from "../authentication/AuthCardWrapper";
+import {Link} from "react-router-dom";
+import AuthFooter from "../../../ui-component/cards/AuthFooter";
+import AuthWrapper1 from "../authentication/AuthWrapper1";
+import {useTheme} from "@mui/material/styles";
+import useAuth from "../../../hooks/useAuth";
+import mx42 from 'assets/images/linksys/linksys-mx4200.png';
 
-const LinksysRouterSetup = () => {
+const LinksysSetupSuccess = () => {
     const theme = useTheme();
-    const { isLoggedIn } = useAuth();
+    const {isLoggedIn} = useAuth();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
-    const [searchParams] = useSearchParams();
-    const [sn, setSN] = useState('');
-    const [routerId, setRouterId] = useState('');
-    const [model, setModel] = useState('');
-
-    useEffect(() => {
-        if (searchParams !== null) {
-            const sn = searchParams.get('sn');
-            const routerId = searchParams.get('routerId');
-            const model = searchParams.get('model');
-            console.log(sn, routerId, model);
-            setSN(sn);
-            setRouterId(routerId);
-            setModel(model);
-            window.history.replaceState(null, '', '/setup');
-        }
-    }, [searchParams]);
-
     return (
         <AuthWrapper1>
-            <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh' }}>
+            <Grid container direction="column" justifyContent="flex-end" sx={{minHeight: '100vh'}}>
                 <Grid item xs={12}>
-                    <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: 'calc(100vh - 68px)' }}>
-                        <Grid item sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
+                    <Grid container justifyContent="center" alignItems="center" sx={{minHeight: 'calc(100vh - 68px)'}}>
+                        <Grid item sx={{m: {xs: 1, sm: 3}, mb: 0}}>
                             <AuthCardWrapper>
                                 <Grid container spacing={2} alignItems="center" justifyContent="center">
                                     <Grid item xs={12}>
@@ -59,17 +40,17 @@ const LinksysRouterSetup = () => {
                                                         fontSize="16px"
                                                         textAlign={matchDownSM ? 'center' : 'inherit'}
                                                     >
-                                                        Enter data to continue setup
+                                                        Your setup is successful!
                                                     </Typography>
                                                 </Stack>
                                             </Grid>
                                         </Grid>
                                     </Grid>
-                                    <Grid item xs={12}>
-                                        <SetupInfo sn={sn} id={routerId} model={model}/>
+                                    <Grid item xs={12} sx={{m: 3}}>
+                                        <img src={mx42} alt="MX4200" width="100%" style={{maxWidth: 780}}/>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <Divider />
+                                        <Divider/>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Grid item container direction="column" alignItems="center" xs={12}>
@@ -77,7 +58,7 @@ const LinksysRouterSetup = () => {
                                                 component={Link}
                                                 to={isLoggedIn ? '/pages/register/register3' : '/register'}
                                                 variant="subtitle1"
-                                                sx={{ textDecoration: 'none' }}
+                                                sx={{textDecoration: 'none'}}
                                             >
                                                 Don&apos;t have an account?
                                             </Typography>
@@ -88,12 +69,12 @@ const LinksysRouterSetup = () => {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid item xs={12} sx={{ m: 3, mt: 1 }}>
-                    <AuthFooter />
+                <Grid item xs={12} sx={{m: 3, mt: 1}}>
+                    <AuthFooter/>
                 </Grid>
             </Grid>
         </AuthWrapper1>
     );
-};
+}
 
-export default LinksysRouterSetup;
+export default LinksysSetupSuccess;
