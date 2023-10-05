@@ -14,6 +14,11 @@ import { ConfigProvider } from 'contexts/ConfigContext';
 
 // style + assets
 import 'assets/scss/style.scss';
+import { Amplify } from 'aws-amplify';
+import awsConfig from './aws-exports';
+
+// Amplify
+Amplify.configure(awsConfig);
 
 // ==============================|| REACT DOM RENDER ||============================== //
 
