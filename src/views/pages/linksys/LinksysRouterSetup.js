@@ -59,7 +59,7 @@ const LinksysRouterSetup = () => {
                                                         fontSize="16px"
                                                         textAlign={matchDownSM ? 'center' : 'inherit'}
                                                     >
-                                                        Enter data to continue setup
+                                                        Set up your Linksys router
                                                     </Typography>
                                                 </Stack>
                                             </Grid>

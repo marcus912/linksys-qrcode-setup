@@ -12,9 +12,7 @@ import {
     IconButton,
     InputAdornment,
     InputLabel,
-    MenuItem,
-    OutlinedInput,
-    Select
+    OutlinedInput
 } from '@mui/material';
 
 // third party
@@ -44,14 +42,14 @@ const SetupInfo = ({...others}) => {
     const scriptedRef = useScriptRef();
 
     const [showPassword, setShowPassword] = React.useState(false);
-    const [showAdminPassword, setShowAdminPassword] = React.useState(false);
+    // const [showAdminPassword, setShowAdminPassword] = React.useState(false);
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
 
-    const handleClickShowAdminPassword = () => {
-        setShowAdminPassword(!showAdminPassword);
-    };
+    // const handleClickShowAdminPassword = () => {
+    //     setShowAdminPassword(!showAdminPassword);
+    // };
 
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
@@ -132,50 +130,50 @@ const SetupInfo = ({...others}) => {
                         />
                     </FormControl>
 
-                    <FormControl
-                        fullWidth
-                        error={Boolean(touched.phoneNumber && errors.phoneNumber)}
-                        sx={{...theme.typography.customInput}}
-                    >
-                        <InputLabel htmlFor="outlined-adornment-phoneNumber">Phone Number</InputLabel>
-                        <OutlinedInput
-                            id="outlined-adornment-phone-number"
-                            type="text"
-                            value={values.phoneNumber}
-                            name="phoneNumber"
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            inputProps={{}}
-                        />
-                        {touched.phoneNumber && errors.phoneNumber && (
-                            <FormHelperText error id="standard-weight-helper-text-phoneNumber">
-                                {errors.phoneNumber}
-                            </FormHelperText>
-                        )}
-                    </FormControl>
+                    {/*<FormControl*/}
+                    {/*    fullWidth*/}
+                    {/*    error={Boolean(touched.phoneNumber && errors.phoneNumber)}*/}
+                    {/*    sx={{...theme.typography.customInput}}*/}
+                    {/*>*/}
+                    {/*    <InputLabel htmlFor="outlined-adornment-phoneNumber">Phone Number</InputLabel>*/}
+                    {/*    <OutlinedInput*/}
+                    {/*        id="outlined-adornment-phone-number"*/}
+                    {/*        type="text"*/}
+                    {/*        value={values.phoneNumber}*/}
+                    {/*        name="phoneNumber"*/}
+                    {/*        onBlur={handleBlur}*/}
+                    {/*        onChange={handleChange}*/}
+                    {/*        inputProps={{}}*/}
+                    {/*    />*/}
+                    {/*    {touched.phoneNumber && errors.phoneNumber && (*/}
+                    {/*        <FormHelperText error id="standard-weight-helper-text-phoneNumber">*/}
+                    {/*            {errors.phoneNumber}*/}
+                    {/*        </FormHelperText>*/}
+                    {/*    )}*/}
+                    {/*</FormControl>*/}
 
-                    <FormControl
-                        fullWidth
-                        error={Boolean(touched.wifiSecurity && errors.wifiSecurity)}
-                        // sx={{ ...theme.typography.customInput }}
-                    >
-                        <Select
-                            id="outlined-adornment-wifiSecurity"
-                            name={'wifiSecurity'}
-                            value={values.wifiSecurity}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            inputProps={{}}
-                        >
-                            <MenuItem value={'WPA2-Personal'}>WPA2-Personal</MenuItem>
-                            <MenuItem value={'WPA3-Personal'}>WPA3-Personal</MenuItem>
-                        </Select>
-                        {touched.wifiSecurity && errors.wifiSecurity && (
-                            <FormHelperText error id="standard-weight-helper-text-wifiSecurity">
-                                {errors.wifiSecurity}
-                            </FormHelperText>
-                        )}
-                    </FormControl>
+                    {/*<FormControl*/}
+                    {/*    fullWidth*/}
+                    {/*    error={Boolean(touched.wifiSecurity && errors.wifiSecurity)}*/}
+                    {/*    // sx={{ ...theme.typography.customInput }}*/}
+                    {/*>*/}
+                    {/*    <Select*/}
+                    {/*        id="outlined-adornment-wifiSecurity"*/}
+                    {/*        name={'wifiSecurity'}*/}
+                    {/*        value={values.wifiSecurity}*/}
+                    {/*        onBlur={handleBlur}*/}
+                    {/*        onChange={handleChange}*/}
+                    {/*        inputProps={{}}*/}
+                    {/*    >*/}
+                    {/*        <MenuItem value={'WPA2-Personal'}>WPA2-Personal</MenuItem>*/}
+                    {/*        <MenuItem value={'WPA3-Personal'}>WPA3-Personal</MenuItem>*/}
+                    {/*    </Select>*/}
+                    {/*    {touched.wifiSecurity && errors.wifiSecurity && (*/}
+                    {/*        <FormHelperText error id="standard-weight-helper-text-wifiSecurity">*/}
+                    {/*            {errors.wifiSecurity}*/}
+                    {/*        </FormHelperText>*/}
+                    {/*    )}*/}
+                    {/*</FormControl>*/}
 
                     <FormControl fullWidth error={Boolean(touched.wifiSsid && errors.wifiSsid)}
                                  sx={{...theme.typography.customInput}}>
@@ -232,41 +230,41 @@ const SetupInfo = ({...others}) => {
                         )}
                     </FormControl>
 
-                    <FormControl
-                        fullWidth
-                        error={Boolean(touched.adminPassword && errors.adminPassword)}
-                        sx={{...theme.typography.customInput}}
-                    >
-                        <InputLabel htmlFor="outlined-adornment-adminPassword">Admin Password</InputLabel>
-                        <OutlinedInput
-                            id="outlined-adornment-adminPassword"
-                            type={showAdminPassword ? 'text' : 'password'}
-                            value={values.adminPassword}
-                            name="adminPassword"
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={handleClickShowAdminPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                        edge="end"
-                                        size="large"
-                                    >
-                                        {showAdminPassword ? <Visibility/> : <VisibilityOff/>}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                            inputProps={{}}
-                            label="adminPassword"
-                        />
-                        {touched.adminPassword && errors.adminPassword && (
-                            <FormHelperText error id="standard-weight-helper-text-adminPassword">
-                                {errors.adminPassword}
-                            </FormHelperText>
-                        )}
-                    </FormControl>
+                    {/*<FormControl*/}
+                    {/*    fullWidth*/}
+                    {/*    error={Boolean(touched.adminPassword && errors.adminPassword)}*/}
+                    {/*    sx={{...theme.typography.customInput}}*/}
+                    {/*>*/}
+                    {/*    <InputLabel htmlFor="outlined-adornment-adminPassword">Admin Password</InputLabel>*/}
+                    {/*    <OutlinedInput*/}
+                    {/*        id="outlined-adornment-adminPassword"*/}
+                    {/*        type={showAdminPassword ? 'text' : 'password'}*/}
+                    {/*        value={values.adminPassword}*/}
+                    {/*        name="adminPassword"*/}
+                    {/*        onBlur={handleBlur}*/}
+                    {/*        onChange={handleChange}*/}
+                    {/*        endAdornment={*/}
+                    {/*            <InputAdornment position="end">*/}
+                    {/*                <IconButton*/}
+                    {/*                    aria-label="toggle password visibility"*/}
+                    {/*                    onClick={handleClickShowAdminPassword}*/}
+                    {/*                    onMouseDown={handleMouseDownPassword}*/}
+                    {/*                    edge="end"*/}
+                    {/*                    size="large"*/}
+                    {/*                >*/}
+                    {/*                    {showAdminPassword ? <Visibility/> : <VisibilityOff/>}*/}
+                    {/*                </IconButton>*/}
+                    {/*            </InputAdornment>*/}
+                    {/*        }*/}
+                    {/*        inputProps={{}}*/}
+                    {/*        label="adminPassword"*/}
+                    {/*    />*/}
+                    {/*    {touched.adminPassword && errors.adminPassword && (*/}
+                    {/*        <FormHelperText error id="standard-weight-helper-text-adminPassword">*/}
+                    {/*            {errors.adminPassword}*/}
+                    {/*        </FormHelperText>*/}
+                    {/*    )}*/}
+                    {/*</FormControl>*/}
 
                     {errors.submit && (
                         <Box sx={{mt: 3}}>
