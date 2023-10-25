@@ -1,8 +1,8 @@
-import { useTheme } from '@mui/material/styles';
-import { Auth } from 'aws-amplify';
+import {useTheme} from '@mui/material/styles';
+import {Auth} from 'aws-amplify';
 import useScriptRef from '../../../hooks/useScriptRef';
 import React from 'react';
-import { Formik } from 'formik';
+import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {
     Box,
@@ -19,9 +19,15 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AnimateButton from '../../../ui-component/extended/AnimateButton';
 import Backdrop from '@mui/material/Backdrop';
+import {LOGIN} from "../../../store/actions";
+import {dispatch} from "../../../store";
+import {setSession} from "../../../contexts/JWTContext";
+import {getLinksysAccount} from "../../../store/slices/user";
+import {useNavigate} from "react-router-dom";
 
 const AmplifyLogin = (others) => {
     const theme = useTheme();
+    const navigate = useNavigate();
 
     const scriptedRef = useScriptRef();
 
@@ -34,10 +40,22 @@ const AmplifyLogin = (others) => {
         event.preventDefault();
     };
 
-    const setup = async ({ email, password }) => {
-        await Auth.signIn({ username: email, password: password });
+    const setup = async ({email, password}) => {
+        await Auth.signIn({username: email, password: password});
         const token = await getSessionCurrentToken();
-        console.log(token);
+        if (token != null) {
+            setSession(token);
+            const account = await dispatch(getLinksysAccount());
+            console.log(account);
+            dispatch({
+                type: LOGIN,
+                payload: {
+                    isLoggedIn: true,
+                    user: account
+                }
+            });
+            navigate('/amplify/accountInfo', {replace: true});
+        }
     };
 
     const getSessionCurrentToken = async () => {
@@ -52,7 +70,7 @@ const AmplifyLogin = (others) => {
                 password: ''
             }}
             validationSchema={Yup.object().shape({})}
-            onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+            onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                 try {
                     await setup({
                         email: values.email,
@@ -60,22 +78,23 @@ const AmplifyLogin = (others) => {
                     });
 
                     if (scriptedRef.current) {
-                        setStatus({ success: true });
+                        setStatus({success: true});
                         setSubmitting(false);
                     }
                 } catch (err) {
                     console.error(err);
                     if (scriptedRef.current) {
-                        setStatus({ success: false });
-                        setErrors({ submit: err.message });
+                        setStatus({success: false});
+                        setErrors({submit: err.message});
                         setSubmitting(false);
                     }
                 }
             }}
         >
-            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+            {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
                 <form noValidate onSubmit={handleSubmit} {...others}>
-                    <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
+                    <FormControl fullWidth error={Boolean(touched.email && errors.email)}
+                                 sx={{...theme.typography.customInput}}>
                         <InputLabel htmlFor="outlined-adornment-email">E-MAIL</InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-email"
@@ -93,7 +112,8 @@ const AmplifyLogin = (others) => {
                         )}
                     </FormControl>
 
-                    <FormControl fullWidth error={Boolean(touched.password && errors.password)} sx={{ ...theme.typography.customInput }}>
+                    <FormControl fullWidth error={Boolean(touched.password && errors.password)}
+                                 sx={{...theme.typography.customInput}}>
                         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-password"
@@ -111,7 +131,7 @@ const AmplifyLogin = (others) => {
                                         edge="end"
                                         size="large"
                                     >
-                                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        {showPassword ? <Visibility/> : <VisibilityOff/>}
                                     </IconButton>
                                 </InputAdornment>
                             }
@@ -126,19 +146,20 @@ const AmplifyLogin = (others) => {
                     </FormControl>
 
                     {errors.submit && (
-                        <Box sx={{ mt: 3 }}>
+                        <Box sx={{mt: 3}}>
                             <FormHelperText error>{errors.submit}</FormHelperText>
                         </Box>
                     )}
-                    <Box sx={{ mt: 2 }}>
+                    <Box sx={{mt: 2}}>
                         <AnimateButton>
-                            <Button color="secondary" disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained">
+                            <Button color="secondary" disabled={isSubmitting} fullWidth size="large" type="submit"
+                                    variant="contained">
                                 Log in
                             </Button>
                         </AnimateButton>
                     </Box>
-                    <Backdrop sx={{ color: '#000000', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isSubmitting}>
-                        <CircularProgress color="inherit" />
+                    <Backdrop sx={{color: '#000000', zIndex: (theme) => theme.zIndex.drawer + 1}} open={isSubmitting}>
+                        <CircularProgress color="inherit"/>
                     </Backdrop>
                 </form>
             )}

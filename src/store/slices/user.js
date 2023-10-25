@@ -18,7 +18,8 @@ const initialState = {
     posts: [],
     detailCards: [],
     simpleCards: [],
-    profileCards: []
+    profileCards: [],
+    linksysAccount: null
 };
 
 const slice = createSlice({
@@ -138,6 +139,14 @@ const slice = createSlice({
         // FILTER PROFILE CARDS
         filterProfileCardsSuccess(state, action) {
             state.profileCards = action.payload;
+        },
+
+        setLinksysAccount(state, action) {
+            state.linksysAccount = action.payload;
+        },
+
+        setAccessToken(state, action) {
+            state.accessToken = action.payload;
         }
     }
 });
@@ -383,6 +392,18 @@ export function filterProfileCards(key) {
         try {
             const response = await axios.post('/api/profile-card/filter', { key });
             dispatch(slice.actions.filterProfileCardsSuccess(response.data.results));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+export function getLinksysAccount() {
+    return async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_LINKSYS_API_URL}/user-service/rest/accounts/self`);
+            await dispatch(slice.actions.setLinksysAccount(response.data.account));
+            return response.data.account;
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }

@@ -6,6 +6,7 @@ import MinimalLayout from 'layout/MinimalLayout';
 import NavMotion from 'layout/NavMotion';
 import Loadable from 'ui-component/Loadable';
 import AmplifyPage from "../views/pages/amplify/AmplifyPage";
+import LinksysAccountInfo from "../views/pages/amplify/LinksysAccountInfo";
 
 // login routing
 const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login3')));
@@ -61,6 +62,10 @@ const LoginRoutes = {
         {
             path: 'amplify',
             element: <AmplifyPage/>
+        },
+        {
+            path: 'amplify/accountInfo',
+            element: <LinksysAccountInfo/>
         }
     ]
 };

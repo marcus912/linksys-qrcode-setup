@@ -33,7 +33,7 @@ const verifyToken = (serviceToken) => {
     return decoded.exp > Date.now() / 1000;
 };
 
-const setSession = (serviceToken) => {
+export const setSession = (serviceToken) => {
     if (serviceToken) {
         localStorage.setItem('serviceToken', serviceToken);
         axios.defaults.headers.common.Authorization = `Bearer ${serviceToken}`;
@@ -55,13 +55,13 @@ export const JWTProvider = ({ children }) => {
                 const serviceToken = window.localStorage.getItem('serviceToken');
                 if (serviceToken && verifyToken(serviceToken)) {
                     setSession(serviceToken);
-                    const response = await axios.get('/api/account/me');
-                    const { user } = response.data;
+                    const response = await axios.get(`${process.env.REACT_APP_LINKSYS_API_URL}/user-service/rest/accounts/self`);
+                    const { account } = response.data;
                     dispatch({
                         type: LOGIN,
                         payload: {
                             isLoggedIn: true,
-                            user
+                            user: account
                         }
                     });
                 } else {

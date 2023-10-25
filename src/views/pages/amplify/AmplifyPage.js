@@ -1,6 +1,6 @@
 import AmplifyLogin from './AmplifyLogin';
-import AuthWrapper1 from "../authentication/AuthWrapper1";
-import {Divider, Grid, Stack, Typography, useMediaQuery} from "@mui/material";
+import AuthWrapper1 from '../authentication/AuthWrapper1';
+import {Divider, Grid, Stack, Typography, useMediaQuery} from '@mui/material';
 import AuthCardWrapper from '../authentication/AuthCardWrapper';
 import {Link} from 'react-router-dom';
 import AuthFooter from '../../../ui-component/cards/AuthFooter';
