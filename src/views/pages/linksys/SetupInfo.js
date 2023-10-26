@@ -61,7 +61,7 @@ const SetupInfo = ({...others}) => {
         console.log(result, message);
         setTimeout(() => {
             navigate('/setup/success', { replace: true });
-        }, 500);
+        }, 200);
     };
 
     return (
