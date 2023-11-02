@@ -4,84 +4,60 @@ import useScriptRef from '../../../hooks/useScriptRef';
 import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import {
-    Box,
-    Button,
-    CircularProgress,
-    FormControl,
-    FormHelperText,
-    IconButton,
-    InputAdornment,
-    InputLabel,
-    OutlinedInput
-} from '@mui/material';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Box, Button, CircularProgress, FormControl, FormHelperText, InputLabel, OutlinedInput } from '@mui/material';
 import AnimateButton from '../../../ui-component/extended/AnimateButton';
 import Backdrop from '@mui/material/Backdrop';
-import { LOGIN } from '../../../store/actions';
-import { dispatch } from '../../../store';
-import { setSession } from '../../../contexts/JWTContext';
-import { getLinksysAccount } from '../../../store/slices/user';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import AmplifyPage from './AmplifyPage';
+import { openSnackbar } from '../../../store/slices/snackbar';
+import { useDispatch } from 'store';
 
-const AmplifyLogin = (others) => {
+const AmplifyVerification = (others) => {
     const theme = useTheme();
+    // const navigate = useNavigate();
+    const scriptedRef = useScriptRef();
+    const { username } = useParams();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const scriptedRef = useScriptRef();
-
-    const [showPassword, setShowPassword] = React.useState(false);
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
-
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
-
-    const setup = async ({ email, password }) => {
-        await Auth.signIn({ username: email, password: password });
-        const token = await getSessionCurrentToken();
-        if (token != null) {
-            setSession(token);
-            const account = await dispatch(getLinksysAccount());
-            console.log(account);
-            dispatch({
-                type: LOGIN,
-                payload: {
-                    isLoggedIn: true,
-                    user: account
-                }
-            });
-            navigate('/amplify/accountInfo', { replace: true });
-        }
-    };
-
-    const getSessionCurrentToken = async () => {
-        return (await Auth.currentSession()).getIdToken().getJwtToken();
+    const verify = async ({ username, code }) => {
+        const resp = await Auth.confirmSignUp(username, code);
+        console.log('Verify result:', resp);
     };
 
     return (
-        <AmplifyPage type={'LOGIN'}>
+        <AmplifyPage title={'Enter your Verification Code'}>
             <Formik
                 enableReinitialize={true}
                 initialValues={{
-                    email: '',
-                    password: ''
+                    email: username,
+                    code: ''
                 }}
                 validationSchema={Yup.object().shape({})}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     try {
-                        await setup({
-                            email: values.email,
-                            password: values.password
+                        await verify({
+                            username: values.email,
+                            code: values.code
                         });
 
                         if (scriptedRef.current) {
                             setStatus({ success: true });
                             setSubmitting(false);
+                            dispatch(
+                                openSnackbar({
+                                    open: true,
+                                    message: 'Your code has been successfully verified.',
+                                    variant: 'alert',
+                                    alert: {
+                                        color: 'success'
+                                    },
+                                    close: false
+                                })
+                            );
+                            setTimeout(() => {
+                                navigate(`/amplify/login`, { replace: true });
+                            }, 1500);
                         }
                     } catch (err) {
                         console.error(err);
@@ -96,7 +72,7 @@ const AmplifyLogin = (others) => {
                 {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
                     <form noValidate onSubmit={handleSubmit} {...others}>
                         <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
-                            <InputLabel htmlFor="outlined-adornment-email">E-MAIL</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-email">Email Address / Username</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-email"
                                 type="text"
@@ -105,6 +81,7 @@ const AmplifyLogin = (others) => {
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 inputProps={{}}
+                                readOnly={true}
                             />
                             {touched.email && errors.email && (
                                 <FormHelperText error id="standard-weight-helper-text-email">
@@ -113,38 +90,20 @@ const AmplifyLogin = (others) => {
                             )}
                         </FormControl>
 
-                        <FormControl
-                            fullWidth
-                            error={Boolean(touched.password && errors.password)}
-                            sx={{ ...theme.typography.customInput }}
-                        >
-                            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                        <FormControl fullWidth error={Boolean(touched.code && errors.code)} sx={{ ...theme.typography.customInput }}>
+                            <InputLabel htmlFor="outlined-adornment-code">Code</InputLabel>
                             <OutlinedInput
-                                id="outlined-adornment-password"
-                                type={showPassword ? 'text' : 'password'}
-                                value={values.password}
-                                name="password"
+                                id="outlined-adornment-code"
+                                type="text"
+                                value={values.code}
+                                name="code"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={handleClickShowPassword}
-                                            onMouseDown={handleMouseDownPassword}
-                                            edge="end"
-                                            size="large"
-                                        >
-                                            {showPassword ? <Visibility /> : <VisibilityOff />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
                                 inputProps={{}}
-                                label="password"
                             />
-                            {touched.password && errors.password && (
-                                <FormHelperText error id="standard-weight-helper-text-password">
-                                    {errors.password}
+                            {touched.code && errors.code && (
+                                <FormHelperText error id="standard-weight-helper-text-code">
+                                    {errors.code}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -157,7 +116,7 @@ const AmplifyLogin = (others) => {
                         <Box sx={{ mt: 2 }}>
                             <AnimateButton>
                                 <Button color="secondary" disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained">
-                                    Log in
+                                    Verify
                                 </Button>
                             </AnimateButton>
                         </Box>
@@ -171,4 +130,4 @@ const AmplifyLogin = (others) => {
     );
 };
 
-export default AmplifyLogin;
+export default AmplifyVerification;

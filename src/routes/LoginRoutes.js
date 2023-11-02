@@ -1,13 +1,15 @@
-import {lazy} from 'react';
+import { lazy } from 'react';
 
 // project imports
 import GuestGuard from 'utils/route-guard/GuestGuard';
 import MinimalLayout from 'layout/MinimalLayout';
 import NavMotion from 'layout/NavMotion';
 import Loadable from 'ui-component/Loadable';
-import AmplifyPage from "../views/pages/amplify/AmplifyPage";
-import LinksysAccountInfo from "../views/pages/amplify/LinksysAccountInfo";
-import AccountProfile from "../views/pages/amplify/AccountProfile";
+import LinksysAccountInfo from '../views/pages/amplify/LinksysAccountInfo';
+import AccountProfile from '../views/pages/amplify/AccountProfile';
+import AmplifyRegister from '../views/pages/amplify/AmplifyRegister';
+import AmplifyLogin from '../views/pages/amplify/AmplifyLogin';
+import AmplifyVerification from '../views/pages/amplify/AmplifyVerification';
 
 // login routing
 const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login3')));
@@ -27,50 +29,58 @@ const LoginRoutes = {
     element: (
         <NavMotion>
             <GuestGuard>
-                <MinimalLayout/>
+                <MinimalLayout />
             </GuestGuard>
         </NavMotion>
     ),
     children: [
         {
             path: '/login',
-            element: <AuthLogin/>
+            element: <AuthLogin />
         },
         {
             path: '/register',
-            element: <AuthRegister/>
+            element: <AuthRegister />
         },
         {
             path: '/forgot',
-            element: <AuthForgotPassword/>
+            element: <AuthForgotPassword />
         },
         {
             path: '/reset-password',
-            element: <AuthResetPassword/>
+            element: <AuthResetPassword />
         },
         {
             path: '/check-mail',
-            element: <AuthCheckMail/>
+            element: <AuthCheckMail />
         },
         {
             path: 'setup',
-            element: <LinksysSetup/>
+            element: <LinksysSetup />
         },
         {
             path: 'setup/success',
-            element: <LinksysSetupSuccess/>
+            element: <LinksysSetupSuccess />
         },
         {
-            path: 'amplify',
-            element: <AmplifyPage/>
+            path: 'amplify/login',
+            element: <AmplifyLogin />
         },
         {
             path: 'amplify/accountInfo',
-            element: <LinksysAccountInfo/>
+            element: <LinksysAccountInfo />
         },
         {
             path: 'amplify/accountInfo/edit',
-            element: <AccountProfile/>
+            element: <AccountProfile />
+        },
+        {
+            path: 'amplify/register',
+            element: <AmplifyRegister />
+        },
+        {
+            path: 'amplify/verification/:username',
+            element: <AmplifyVerification />
         }
     ]
 };

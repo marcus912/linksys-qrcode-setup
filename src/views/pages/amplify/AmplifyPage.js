@@ -1,13 +1,13 @@
-import AmplifyLogin from './AmplifyLogin';
 import AuthWrapper1 from '../authentication/AuthWrapper1';
-import {Divider, Grid, Stack, Typography, useMediaQuery} from '@mui/material';
+import { Divider, Grid, Stack, Typography, useMediaQuery } from '@mui/material';
 import AuthCardWrapper from '../authentication/AuthCardWrapper';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AuthFooter from '../../../ui-component/cards/AuthFooter';
-import {useTheme} from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useAuth from '../../../hooks/useAuth';
+import PropTypes from 'prop-types';
 
-const AmplifyPage = () => {
+const AmplifyPage = ({ children, type, title }) => {
     const theme = useTheme();
     const { isLoggedIn } = useAuth();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
@@ -40,28 +40,39 @@ const AmplifyPage = () => {
                                                         fontSize="16px"
                                                         textAlign={matchDownSM ? 'center' : 'inherit'}
                                                     >
-                                                        Enter data to continue setup
+                                                        {title ? title : 'Enter your credentials to continue'}
                                                     </Typography>
                                                 </Stack>
                                             </Grid>
                                         </Grid>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <AmplifyLogin />
+                                        {children}
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Divider />
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Grid item container direction="column" alignItems="center" xs={12}>
-                                            <Typography
-                                                component={Link}
-                                                to={isLoggedIn ? '/pages/register/register3' : '/register'}
-                                                variant="subtitle1"
-                                                sx={{ textDecoration: 'none' }}
-                                            >
-                                                Don&apos;t have an account?
-                                            </Typography>
+                                            {type === 'LOGIN' ? (
+                                                <Typography
+                                                    component={Link}
+                                                    to={isLoggedIn ? '/amplify/register' : '/amplify/register'}
+                                                    variant="subtitle1"
+                                                    sx={{ textDecoration: 'none' }}
+                                                >
+                                                    Don&apos;t have an account?
+                                                </Typography>
+                                            ) : type === 'REGISTER' ? (
+                                                <Typography
+                                                    component={Link}
+                                                    to={isLoggedIn ? '/amplify/login' : '/amplify/login'}
+                                                    variant="subtitle1"
+                                                    sx={{ textDecoration: 'none' }}
+                                                >
+                                                    Already have an account??
+                                                </Typography>
+                                            ) : null}
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -75,6 +86,12 @@ const AmplifyPage = () => {
             </Grid>
         </AuthWrapper1>
     );
-}
+};
+
+AmplifyPage.propTypes = {
+    children: PropTypes.element,
+    type: PropTypes.string,
+    title: PropTypes.string
+};
 
 export default AmplifyPage;
