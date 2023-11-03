@@ -89,7 +89,7 @@ const AmplifyPage = ({ children, type, title }) => {
 };
 
 AmplifyPage.propTypes = {
-    children: PropTypes.element,
+    children: PropTypes.any,
     type: PropTypes.string,
     title: PropTypes.string
 };
