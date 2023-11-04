@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'store';
-import { Link, useNavigate } from 'react-router-dom';
+import React, {useEffect} from 'react';
+import {useDispatch} from 'store';
+import {Link, useNavigate} from 'react-router-dom';
 
 // material-ui
-import { useTheme } from '@mui/material/styles';
+import {useTheme} from '@mui/material/styles';
 import {
     Box,
     Button,
@@ -23,23 +23,23 @@ import {
 
 // third party
 import * as Yup from 'yup';
-import { Formik } from 'formik';
+import {Formik} from 'formik';
 
 // project imports
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import useScriptRef from 'hooks/useScriptRef';
-import { strengthColor, strengthIndicatorNumFunc } from 'utils/password-strength';
-import { openSnackbar } from 'store/slices/snackbar';
+import {strengthColor, strengthIndicatorNumFunc} from 'utils/password-strength';
+import {openSnackbar} from 'store/slices/snackbar';
 
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AmplifyPage from './AmplifyPage';
-import { Auth } from 'aws-amplify';
+import {Auth} from 'aws-amplify';
 
 // ===========================|| FIREBASE - REGISTER ||=========================== //
 
-const AmplifyRegister = ({ ...others }) => {
+const AmplifyRegister = ({...others}) => {
     const theme = useTheme();
     const navigate = useNavigate();
     const scriptedRef = useScriptRef();
@@ -70,28 +70,24 @@ const AmplifyRegister = ({ ...others }) => {
         changePassword('123456');
     }, []);
 
-    async function handleSignUp({ username, password, email, phone_number, given_name, family_name }) {
-        try {
-            await Auth.signUp({
-                username: username,
-                password: password,
-                attributes: {
-                    email: email,
-                    phone_number: phone_number, // E.164 number convention
-                    given_name: given_name,
-                    family_name: family_name
-                }
-            });
-        } catch (e) {
-            console.log(e);
-        }
+    async function handleSignUp({username, password, email, countryCode, phoneNumber, given_name, family_name}) {
+        await Auth.signUp({
+            username: username,
+            password: password,
+            attributes: {
+                email: email,
+                phone_number: `${countryCode}${phoneNumber}`, // E.164 number convention
+                given_name: given_name,
+                family_name: family_name
+            }
+        });
     }
 
     return (
         <AmplifyPage type={'REGISTER'}>
             <Grid container direction="column" justifyContent="center" spacing={2}>
                 <Grid item xs={12} container alignItems="center" justifyContent="center">
-                    <Box sx={{ mb: 2 }}>
+                    <Box sx={{mb: 2}}>
                         <Typography variant="subtitle1">Sign up with Email address</Typography>
                     </Box>
                 </Grid>
@@ -104,24 +100,26 @@ const AmplifyRegister = ({ ...others }) => {
                     firstName: '',
                     lastName: '',
                     phoneNumber: '',
+                    countryCode: '',
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
                     email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
                     password: Yup.string().max(255).required('Password is required')
                 })}
-                onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+                onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
                     try {
                         await handleSignUp({
                             username: values.email,
                             password: values.password,
                             email: values.email,
-                            phone_number: values.phoneNumber,
+                            phoneNumber: values.phoneNumber,
+                            countryCode: values.countryCode,
                             given_name: values.firstName,
                             family_name: values.lastName
                         });
                         if (scriptedRef.current) {
-                            setStatus({ success: true });
+                            setStatus({success: true});
                             setSubmitting(false);
                             dispatch(
                                 openSnackbar({
@@ -136,20 +134,20 @@ const AmplifyRegister = ({ ...others }) => {
                             );
 
                             setTimeout(() => {
-                                navigate(`/amplify/verification/${values.email}`, { replace: true });
+                                navigate(`/amplify/verification/${values.email}`, {replace: true});
                             }, 1500);
                         }
                     } catch (err) {
                         console.error(err);
                         if (scriptedRef.current) {
-                            setStatus({ success: false });
-                            setErrors({ submit: err.message });
+                            setStatus({success: false});
+                            setErrors({submit: err.message});
                             setSubmitting(false);
                         }
                     }
                 }}
             >
-                {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+                {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
                     <form noValidate onSubmit={handleSubmit} {...others}>
                         <Grid container spacing={matchDownSM ? 0 : 2}>
                             <Grid item xs={12} sm={6}>
@@ -162,7 +160,7 @@ const AmplifyRegister = ({ ...others }) => {
                                     value={values.firstName}
                                     onBlur={handleBlur}
                                     onChange={handleChange}
-                                    sx={{ ...theme.typography.customInput }}
+                                    sx={{...theme.typography.customInput}}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -175,35 +173,44 @@ const AmplifyRegister = ({ ...others }) => {
                                     value={values.lastName}
                                     onBlur={handleBlur}
                                     onChange={handleChange}
-                                    sx={{ ...theme.typography.customInput }}
+                                    sx={{...theme.typography.customInput}}
                                 />
                             </Grid>
                         </Grid>
 
-                        <FormControl
-                            fullWidth
-                            error={Boolean(touched.phoneNumber && errors.phoneNumber)}
-                            sx={{ ...theme.typography.customInput }}
-                        >
-                            <InputLabel htmlFor="outlined-adornment-phone-register">Phone Number</InputLabel>
-                            <OutlinedInput
-                                id="outlined-adornment-phone-register"
-                                type="text"
-                                value={values.phoneNumber}
-                                name="phoneNumber"
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                inputProps={{}}
-                            />
-                            {touched.phoneNumber && errors.phoneNumber && (
-                                <FormHelperText error id="standard-weight-helper-text-phone-register">
-                                    {errors.phoneNumber}
-                                </FormHelperText>
-                            )}
-                        </FormControl>
+                        <Grid container spacing={matchDownSM ? 0 : 2}>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Country Code"
+                                    margin="normal"
+                                    name="countryCode"
+                                    type="text"
+                                    value={values.countryCode}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    sx={{...theme.typography.customInput}}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Phone Number"
+                                    margin="normal"
+                                    name="phoneNumber"
+                                    type="text"
+                                    value={values.phoneNumber}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    sx={{...theme.typography.customInput}}
+                                />
+                            </Grid>
+                        </Grid>
 
-                        <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
-                            <InputLabel htmlFor="outlined-adornment-email-register">Email Address / Username</InputLabel>
+                        <FormControl fullWidth error={Boolean(touched.email && errors.email)}
+                                     sx={{...theme.typography.customInput}}>
+                            <InputLabel htmlFor="outlined-adornment-email-register">Email Address /
+                                Username</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-email-register"
                                 type="email"
@@ -223,7 +230,7 @@ const AmplifyRegister = ({ ...others }) => {
                         <FormControl
                             fullWidth
                             error={Boolean(touched.password && errors.password)}
-                            sx={{ ...theme.typography.customInput }}
+                            sx={{...theme.typography.customInput}}
                         >
                             <InputLabel htmlFor="outlined-adornment-password-register">Password</InputLabel>
                             <OutlinedInput
@@ -246,7 +253,7 @@ const AmplifyRegister = ({ ...others }) => {
                                             edge="end"
                                             size="large"
                                         >
-                                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                                            {showPassword ? <Visibility/> : <VisibilityOff/>}
                                         </IconButton>
                                     </InputAdornment>
                                 }
@@ -261,12 +268,12 @@ const AmplifyRegister = ({ ...others }) => {
 
                         {strength !== 0 && (
                             <FormControl fullWidth>
-                                <Box sx={{ mb: 2 }}>
+                                <Box sx={{mb: 2}}>
                                     <Grid container spacing={2} alignItems="center">
                                         <Grid item>
                                             <Box
-                                                style={{ backgroundColor: level?.color }}
-                                                sx={{ width: 85, height: 8, borderRadius: '7px' }}
+                                                style={{backgroundColor: level?.color}}
+                                                sx={{width: 85, height: 8, borderRadius: '7px'}}
                                             />
                                         </Grid>
                                         <Grid item>
@@ -302,12 +309,12 @@ const AmplifyRegister = ({ ...others }) => {
                             </Grid>
                         </Grid>
                         {errors.submit && (
-                            <Box sx={{ mt: 3 }}>
+                            <Box sx={{mt: 3}}>
                                 <FormHelperText error>{errors.submit}</FormHelperText>
                             </Box>
                         )}
 
-                        <Box sx={{ mt: 2 }}>
+                        <Box sx={{mt: 2}}>
                             <AnimateButton>
                                 <Button
                                     disableElevation

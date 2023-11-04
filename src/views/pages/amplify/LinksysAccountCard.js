@@ -9,7 +9,7 @@ import { dispatch } from '../../../store';
 const LinksysAccountCard = () => {
     const account = useSelector((state) => state.user.linksysAccount);
     useEffect(() => {
-        if (dispatch && account == null) {
+        if (dispatch) {
             dispatch(getLinksysAccount());
         }
     }, [dispatch]);

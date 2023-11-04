@@ -2,6 +2,7 @@
     "name": "berry-material-react",
     "version": "3.6.0",
     "private": true,
+    "homepage": ".",
     "dependencies": {
         "@auth0/auth0-spa-js": "^2.0.2",
         "@aws-amplify/ui-react": "^5.3.1",
