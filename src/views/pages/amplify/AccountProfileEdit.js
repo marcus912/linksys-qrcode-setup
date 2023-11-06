@@ -1,34 +1,39 @@
 // material-ui
-import {Button, FormControl, FormHelperText, Grid, Stack, TextField} from '@mui/material';
+import { Button, FormControl, FormHelperText, Grid, Stack, TextField } from '@mui/material';
 
 // project imports
 import SubCard from 'ui-component/cards/SubCard';
 import AnimateButton from 'ui-component/extended/AnimateButton';
-import {gridSpacing} from 'store/constant';
+import { gridSpacing } from 'store/constant';
 
 // assets
 import React from 'react';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from '../../../utils/axios';
-import {openSnackbar} from '../../../store/slices/snackbar';
-import {useDispatch} from 'store';
+import { openSnackbar } from '../../../store/slices/snackbar';
+import { useDispatch } from 'store';
 import * as Yup from 'yup';
-import {Formik} from 'formik';
+import { Formik } from 'formik';
+import useScriptRef from '../../../hooks/useScriptRef';
 
 // ==============================|| PROFILE 3 - PROFILE ||============================== //
 
 const AccountProfile = (account) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const scriptedRef = useScriptRef();
     const doUpdate = async (acc) => {
-        const response = await axios.put(`${process.env.REACT_APP_LINKSYS_API_URL}/user-service/rest/accounts/self`,
-            { account: acc });
-        if (response.status === 200) {
+        const responseAcc = await axios.put(`${process.env.REACT_APP_LINKSYS_API_URL}/user-service/rest/accounts/self`, { account: acc });
+        const responsePref = await axios.put(`${process.env.REACT_APP_LINKSYS_API_URL}/user-service/rest/accounts/self/preferences`, {
+            preferences: acc?.preferences
+        });
+        if (responseAcc.status === 200 && responsePref.status === 200) {
             dispatch(
                 openSnackbar({
                     open: true,
                     message: 'Successfully updated.',
                     variant: 'alert',
+                    anchorOrigin: { vertical: 'bottom', horizontal: 'center' },
                     alert: {
                         color: 'success'
                     },
@@ -38,6 +43,8 @@ const AccountProfile = (account) => {
             setTimeout(() => {
                 navigate('/amplify/accountInfo', { replace: true });
             }, 1500);
+        } else {
+            throw new Error('Call Edit profile failure');
         }
     };
     return (
@@ -55,7 +62,8 @@ const AccountProfile = (account) => {
             validationSchema={Yup.object().shape({})}
             onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                 try {
-                    await doUpdate({...account,
+                    await doUpdate({
+                        ...account,
                         // username: values.username,
                         firstName: values.firstName,
                         lastName: values.lastName,
@@ -81,6 +89,18 @@ const AccountProfile = (account) => {
                         setStatus({ success: false });
                         setErrors({ submit: err.message });
                         setSubmitting(false);
+                        dispatch(
+                            openSnackbar({
+                                open: true,
+                                message: err?.errors[0]?.error?.message,
+                                variant: 'alert',
+                                anchorOrigin: { vertical: 'bottom', horizontal: 'center' },
+                                alert: {
+                                    color: 'error'
+                                },
+                                close: false
+                            })
+                        );
                     }
                 }
             }}
@@ -97,9 +117,7 @@ const AccountProfile = (account) => {
                                             fullWidth
                                             label="Email address"
                                             defaultValue={account?.username}
-                                            inputProps={
-                                                { readOnly: true, }
-                                            }
+                                            inputProps={{ readOnly: true }}
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
