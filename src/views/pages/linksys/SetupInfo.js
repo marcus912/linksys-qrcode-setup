@@ -41,7 +41,7 @@ const SetupInfo = ({...others}) => {
 
     const scriptedRef = useScriptRef();
 
-    const [showPassword, setShowPassword] = React.useState(false);
+    const [showPassword, setShowPassword] = React.useState(true);
     // const [showAdminPassword, setShowAdminPassword] = React.useState(false);
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
@@ -71,9 +71,9 @@ const SetupInfo = ({...others}) => {
                 serialNumber: sn,
                 modelNo: model,
                 phoneNumber: '',
-                wifiSsid: '',
+                wifiSsid: 'Linksys-Guest',
                 wifiSecurity: 'WPA2-Personal',
-                wifiPassword: '',
+                wifiPassword: 'LinksysGuest131!',
                 adminPassword: '',
                 submit: null
             }}
