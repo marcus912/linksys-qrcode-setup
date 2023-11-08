@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 // material-ui
-import {useTheme} from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import {
     Box,
     Button,
@@ -17,7 +17,7 @@ import {
 
 // third party
 import * as Yup from 'yup';
-import {Formik} from 'formik';
+import { Formik } from 'formik';
 
 // project imports
 import AnimateButton from 'ui-component/extended/AnimateButton';
@@ -25,17 +25,17 @@ import useScriptRef from 'hooks/useScriptRef';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from '../../../utils/axios';
-import {useNavigate} from "react-router-dom";
-import Backdrop from "@mui/material/Backdrop";
+import { useNavigate } from 'react-router-dom';
+import Backdrop from '@mui/material/Backdrop';
 
 // assets
 
 // ===============================|| JWT LOGIN ||=============================== //
 
-const SetupInfo = ({...others}) => {
+const SetupInfo = ({ ...others }) => {
     const apiEndpoint = 'http://10.23.1.58:8180';
     const navigate = useNavigate();
-    const {sn, id, model} = others;
+    const { sn, id, model } = others;
     console.log('SetupInfo', sn, id, model);
     const theme = useTheme();
 
@@ -57,7 +57,7 @@ const SetupInfo = ({...others}) => {
 
     const setup = async (data) => {
         const response = await axios.post(`${apiEndpoint}/v1/qrcode/setup`, data);
-        const {result, message} = response.data;
+        const { result, message } = response.data;
         console.log(result, message);
         setTimeout(() => {
             navigate('/setup/success', { replace: true });
@@ -78,7 +78,7 @@ const SetupInfo = ({...others}) => {
                 submit: null
             }}
             validationSchema={Yup.object().shape({})}
-            onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
+            onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                 try {
                     await setup({
                         externalRouterId: id,
@@ -91,22 +91,22 @@ const SetupInfo = ({...others}) => {
                     });
 
                     if (scriptedRef.current) {
-                        setStatus({success: true});
+                        setStatus({ success: true });
                         setSubmitting(false);
                     }
                 } catch (err) {
                     console.error(err);
                     if (scriptedRef.current) {
-                        setStatus({success: false});
-                        setErrors({submit: err.message});
+                        setStatus({ success: false });
+                        setErrors({ submit: err.message });
                         setSubmitting(false);
                     }
                 }
             }}
         >
-            {({errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values}) => (
+            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
                 <form noValidate onSubmit={handleSubmit} {...others}>
-                    <FormControl fullWidth sx={{...theme.typography.customInput}}>
+                    <FormControl fullWidth sx={{ ...theme.typography.customInput }}>
                         <InputLabel htmlFor="outlined-adornment-serialNumber">Serial Number</InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-serialNumber"
@@ -118,7 +118,7 @@ const SetupInfo = ({...others}) => {
                         />
                     </FormControl>
 
-                    <FormControl fullWidth sx={{...theme.typography.customInput}}>
+                    <FormControl fullWidth sx={{ ...theme.typography.customInput }}>
                         <InputLabel htmlFor="outlined-adornment-modelNo">Model Number</InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-modelNo"
@@ -129,28 +129,6 @@ const SetupInfo = ({...others}) => {
                             readOnly={true}
                         />
                     </FormControl>
-
-                    {/*<FormControl*/}
-                    {/*    fullWidth*/}
-                    {/*    error={Boolean(touched.phoneNumber && errors.phoneNumber)}*/}
-                    {/*    sx={{...theme.typography.customInput}}*/}
-                    {/*>*/}
-                    {/*    <InputLabel htmlFor="outlined-adornment-phoneNumber">Phone Number</InputLabel>*/}
-                    {/*    <OutlinedInput*/}
-                    {/*        id="outlined-adornment-phone-number"*/}
-                    {/*        type="text"*/}
-                    {/*        value={values.phoneNumber}*/}
-                    {/*        name="phoneNumber"*/}
-                    {/*        onBlur={handleBlur}*/}
-                    {/*        onChange={handleChange}*/}
-                    {/*        inputProps={{}}*/}
-                    {/*    />*/}
-                    {/*    {touched.phoneNumber && errors.phoneNumber && (*/}
-                    {/*        <FormHelperText error id="standard-weight-helper-text-phoneNumber">*/}
-                    {/*            {errors.phoneNumber}*/}
-                    {/*        </FormHelperText>*/}
-                    {/*    )}*/}
-                    {/*</FormControl>*/}
 
                     {/*<FormControl*/}
                     {/*    fullWidth*/}
@@ -175,8 +153,7 @@ const SetupInfo = ({...others}) => {
                     {/*    )}*/}
                     {/*</FormControl>*/}
 
-                    <FormControl fullWidth error={Boolean(touched.wifiSsid && errors.wifiSsid)}
-                                 sx={{...theme.typography.customInput}}>
+                    <FormControl fullWidth error={Boolean(touched.wifiSsid && errors.wifiSsid)} sx={{ ...theme.typography.customInput }}>
                         <InputLabel htmlFor="outlined-adornment-wifiSsid">WiFi SSID</InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-wifiSsid"
@@ -197,7 +174,7 @@ const SetupInfo = ({...others}) => {
                     <FormControl
                         fullWidth
                         error={Boolean(touched.wifiPassword && errors.wifiPassword)}
-                        sx={{...theme.typography.customInput}}
+                        sx={{ ...theme.typography.customInput }}
                     >
                         <InputLabel htmlFor="outlined-adornment-wifiPassword">WiFi Password</InputLabel>
                         <OutlinedInput
@@ -216,7 +193,7 @@ const SetupInfo = ({...others}) => {
                                         edge="end"
                                         size="large"
                                     >
-                                        {showPassword ? <Visibility/> : <VisibilityOff/>}
+                                        {showPassword ? <Visibility /> : <VisibilityOff />}
                                     </IconButton>
                                 </InputAdornment>
                             }
@@ -226,6 +203,28 @@ const SetupInfo = ({...others}) => {
                         {touched.wifiPassword && errors.wifiPassword && (
                             <FormHelperText error id="standard-weight-helper-text-adminPassword">
                                 {errors.wifiPassword}
+                            </FormHelperText>
+                        )}
+                    </FormControl>
+
+                    <FormControl
+                        fullWidth
+                        error={Boolean(touched.phoneNumber && errors.phoneNumber)}
+                        sx={{ ...theme.typography.customInput }}
+                    >
+                        <InputLabel htmlFor="outlined-adornment-phoneNumber">Phone Number</InputLabel>
+                        <OutlinedInput
+                            id="outlined-adornment-phone-number"
+                            type="text"
+                            value={values.phoneNumber}
+                            name="phoneNumber"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            inputProps={{}}
+                        />
+                        {touched.phoneNumber && errors.phoneNumber && (
+                            <FormHelperText error id="standard-weight-helper-text-phoneNumber">
+                                {errors.phoneNumber}
                             </FormHelperText>
                         )}
                     </FormControl>
@@ -267,22 +266,19 @@ const SetupInfo = ({...others}) => {
                     {/*</FormControl>*/}
 
                     {errors.submit && (
-                        <Box sx={{mt: 3}}>
+                        <Box sx={{ mt: 3 }}>
                             <FormHelperText error>{errors.submit}</FormHelperText>
                         </Box>
                     )}
-                    <Box sx={{mt: 2}}>
+                    <Box sx={{ mt: 2 }}>
                         <AnimateButton>
-                            <Button color="secondary" disabled={isSubmitting} fullWidth size="large" type="submit"
-                                    variant="contained">
+                            <Button color="secondary" disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained">
                                 Setup
                             </Button>
                         </AnimateButton>
                     </Box>
-                    <Backdrop
-                        sx={{color: '#000000', zIndex: (theme) => theme.zIndex.drawer + 1}}
-                        open={isSubmitting}>
-                        <CircularProgress color="inherit"/>
+                    <Backdrop sx={{ color: '#000000', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isSubmitting}>
+                        <CircularProgress color="inherit" />
                     </Backdrop>
                 </form>
             )}
