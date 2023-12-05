@@ -26,6 +26,10 @@ import { getLinksysAccount } from '../../../store/slices/user';
 import { useNavigate } from 'react-router-dom';
 import AmplifyPage from './AmplifyPage';
 
+Auth.configure({
+    authenticationFlowType: 'USER_PASSWORD_AUTH'
+});
+
 const AmplifyLogin = (others) => {
     const theme = useTheme();
     const navigate = useNavigate();
